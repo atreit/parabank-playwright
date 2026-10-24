@@ -1,6 +1,6 @@
 import { expect, type Page } from '@playwright/test';
 
-export class LoginPage { 
+export class AuthorizationPanel { 
 
     private readonly title: string = 'ParaBank | Welcome | Online Banking';
 
@@ -20,6 +20,10 @@ export class LoginPage {
 
     async clickLogInButton() {
         await this.logInButton.click();
+    }
+    
+    async clickLogOutLink() {
+        await this.logOutLink.click();
     }
 
     // Assertions
@@ -42,6 +46,14 @@ export class LoginPage {
 
     async expectLogInButtonVisible() {
         await expect(this.logInButton).toBeVisible();
+    }
+
+    async expectLogOutLinkVisible() {
+        await expect(this.logOutLink).toBeVisible();
+    }
+
+    async expectLogOutLinkNotVisible() {
+        await expect(this.logOutLink).not.toBeVisible();
     }
 
     async expectUsernameInputValue(value: string) {
@@ -68,6 +80,10 @@ export class LoginPage {
 
     private get logInButton() {
         return this.page.getByRole('button', { name: 'Log In' });
+    }
+
+    private get logOutLink() {
+        return this.page.getByRole('link', { name: 'Log Out' });
     }
 
     private get customerLoginHeading() {
