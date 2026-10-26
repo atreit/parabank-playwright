@@ -1,10 +1,6 @@
-import { test } from '@playwright/test';
-import { AuthorizationPanel } from '../pages/AuthorizationPanel';
-import { AccountsOverviewPage } from '../pages/AccountsOverviewPage';
+import { test } from '../fixtures/test-fixtures';
 
-test('Login form visibility', async ({ page }) => {
-  const authorizationPanel = new AuthorizationPanel(page);
-
+test('Login form visibility', async ({ authorizationPanel }) => {
   await authorizationPanel.goTo();
   await authorizationPanel.expectTitle();
   await authorizationPanel.expectCustomerLoginHeadingVisible();
@@ -13,9 +9,7 @@ test('Login form visibility', async ({ page }) => {
   await authorizationPanel.expectLogInButtonVisible();
 });
 
-test('Empty username', async ({ page }) => {
-  const authorizationPanel = new AuthorizationPanel(page);
-
+test('Empty username', async ({ authorizationPanel }) => {
   await authorizationPanel.goTo();
   await authorizationPanel.expectUsernameInputValue('');
   await authorizationPanel.clickLogInButton();
@@ -23,9 +17,7 @@ test('Empty username', async ({ page }) => {
   await authorizationPanel.expectErrorMessage('Please enter a username and password.');
 });
 
-test('Login with invalid credentials', async ({ page }) => {
-  const authorizationPanel = new AuthorizationPanel(page);
-
+test('Login with invalid credentials', async ({ authorizationPanel }) => {
   await authorizationPanel.goTo();
   await authorizationPanel.logIn('invalid', 'invalid');
   await authorizationPanel.expectErrorHeadingVisible();
@@ -33,26 +25,22 @@ test('Login with invalid credentials', async ({ page }) => {
   await authorizationPanel.expectLogOutLinkNotVisible();
 });
 
-test('Successful login with valid credentials', async ({ page }) => {
-  const authorizationPanel = new AuthorizationPanel(page);
-
+test('Successful login with valid credentials', async ({ 
+  authorizationPanel,
+  accountsOverviewPage,
+ }) => {
   await authorizationPanel.goTo();
   await authorizationPanel.logIn('john', 'demo');
   await authorizationPanel.expectLogOutLinkVisible();
-
-  const accountsOverviewPage = new AccountsOverviewPage(page);
-
   await accountsOverviewPage.expectAccountsOverviewHeadingVisible();
 });
 
-test('Successful logout', async ({ page }) => {
-  const authorizationPanel = new AuthorizationPanel(page);
-
+test('Successful logout', async ({ 
+  authorizationPanel,
+  accountsOverviewPage,
+ }) => {
   await authorizationPanel.goTo();
   await authorizationPanel.logIn('john', 'demo');
-
-  const accountsOverviewPage = new AccountsOverviewPage(page);
-
   await accountsOverviewPage.expectAccountsOverviewHeadingVisible();
   await authorizationPanel.expectLogOutLinkVisible();
   await authorizationPanel.clickLogOutLink();
